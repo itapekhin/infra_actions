@@ -53,7 +53,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/infra:infra_actions_v1.0.0
+          tags: ${{ secrets.DOCKER_USERNAME }}/infra:latest
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
@@ -64,10 +64,10 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }} # Еслиe вашssh-ключw wзащищён фразой-паролем
+        passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           # Выполняет pull образа с DockerHub
-          sudo docker pull /home/${{ secrets.USER }}/infra_actions
+          sudo docker pull /home/${{ secrets.USER }}
           #остановка всех контейнеров
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker run --rm -d -p 5000:5000 /home/${{ secrets.USER }}/infra_actions
+          sudo docker run --rm -d -p 5000:5000 /home/${{ secrets.USER }}
